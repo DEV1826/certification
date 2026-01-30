@@ -37,7 +37,8 @@ export default function RegisterPage() {
     try {
       const user = await authService.register({ email, password, firstName, lastName });
       setUser(user);
-      // On ne navigue pas ici, le useEffect s'en charge après setUser
+      // Naviguer directement après inscription réussie (évite dépendance sur store update)
+      navigate('/login', { replace: true });
     } catch (err: any) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription");
     } finally {
@@ -45,16 +46,7 @@ export default function RegisterPage() {
     }
   };
 
-  // Redirige après inscription si connecté (après setUser)
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      if (user.role === 'ADMIN') {
-        navigate('/admin/dashboard', { replace: true });
-      } else {
-        navigate('/dashboard', { replace: true });
-      }
-    }
-  }, [isAuthenticated, user, navigate]);
+  // ...existing code...
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50">
