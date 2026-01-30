@@ -4,7 +4,7 @@ import axios from 'axios';
  * Configuration de l'API client pour communiquer avec le backend
  */
 
-const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:8080/api';
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL;
 
 // Instance Axios configurée
 const apiClient = axios.create({
@@ -103,7 +103,7 @@ export const authService = {
    * Inscription
    */
   register: async (data: RegisterRequest): Promise<User> => {
-    const response = await apiClient.post<User>('/auth/register', data);
+    const response = await apiClient.post<User>('/api/auth/register', data);
     return response.data;
   },
 
@@ -111,7 +111,7 @@ export const authService = {
    * Connexion
    */
   login: async (data: LoginRequest): Promise<JwtResponse> => {
-    const response = await apiClient.post<JwtResponse>('/auth/login', data);
+    const response = await apiClient.post<JwtResponse>('/api/auth/login', data);
     // Stocker les tokens
     localStorage.setItem('accessToken', response.data.accessToken);
     localStorage.setItem('refreshToken', response.data.refreshToken);
