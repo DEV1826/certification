@@ -43,7 +43,9 @@ export default function LoginPage() {
         navigate('/dashboard', { replace: true });
       }
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Email ou mot de passe invalide');
+      const serverData = err.response?.data;
+      const serverMsg = serverData?.message || serverData?.error || (typeof serverData === 'string' ? serverData : null);
+      setError(serverMsg || 'Email ou mot de passe invalide');
     } finally {
       setLoading(false);
     }
