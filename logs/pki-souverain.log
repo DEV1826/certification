@@ -22271,3 +22271,495 @@ This generated password is for development use only. Your security configuration
 2026-01-30T16:13:20.466+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing POST /auth/login
 2026-01-30T16:13:20.472+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-5] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
 2026-01-30T16:15:59.353+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T16:15:59.382+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing POST /auth/register
+2026-01-30T16:15:59.387+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-8] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-01-30T16:16:00.492+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing POST /auth/register
+2026-01-30T16:16:00.499+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-9] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-01-30T16:16:12.181+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing POST /auth/register
+2026-01-30T16:16:12.187+01:00 DEBUG 35860 --- [pki-souverain-backend] [http-nio-8080-exec-10] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-01-30T16:19:10.384+01:00  INFO 35860 --- [pki-souverain-backend] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-01-30T16:19:10.387+01:00  INFO 35860 --- [pki-souverain-backend] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2026-01-30T16:19:10.391+01:00  INFO 35860 --- [pki-souverain-backend] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2026-01-30T16:19:34.575+01:00  INFO 35696 --- [pki-souverain-backend] [main] cm.gov.pki.PKISouverainApplication       : Starting PKISouverainApplication using Java 21.0.10 with PID 35696 (C:\Users\COMPUTER STORES\Desktop\projet_s\backend\target\classes started by COMPUTER STORES in C:\Users\COMPUTER STORES\Desktop\projet_s\backend)
+2026-01-30T16:19:34.580+01:00  INFO 35696 --- [pki-souverain-backend] [main] cm.gov.pki.PKISouverainApplication       : No active profile set, falling back to 1 default profile: "default"
+2026-01-30T16:19:38.076+01:00  INFO 35696 --- [pki-souverain-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-30T16:19:38.243+01:00  INFO 35696 --- [pki-souverain-backend] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 146 ms. Found 5 JPA repository interfaces.
+2026-01-30T16:19:40.522+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2026-01-30T16:19:40.552+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-30T16:19:40.555+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.17]
+2026-01-30T16:19:40.745+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring embedded WebApplicationContext
+2026-01-30T16:19:40.745+01:00  INFO 35696 --- [pki-souverain-backend] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 6023 ms
+2026-01-30T16:19:41.522+01:00  INFO 35696 --- [pki-souverain-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-30T16:19:41.962+01:00  INFO 35696 --- [pki-souverain-backend] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@6ec3d8e4
+2026-01-30T16:19:41.970+01:00  INFO 35696 --- [pki-souverain-backend] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-30T16:19:42.210+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.f.c.internal.license.VersionPrinter    : Flyway Community Edition 9.22.3 by Redgate
+2026-01-30T16:19:42.210+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.f.c.internal.license.VersionPrinter    : See release notes here: https://rd.gt/416ObMi
+2026-01-30T16:19:42.210+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.f.c.internal.license.VersionPrinter    : 
+2026-01-30T16:19:42.248+01:00  INFO 35696 --- [pki-souverain-backend] [main] org.flywaydb.core.FlywayExecutor         : Database: jdbc:postgresql://localhost:5432/pki_db (PostgreSQL 18.1)
+2026-01-30T16:19:42.262+01:00  WARN 35696 --- [pki-souverain-backend] [main] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: PostgreSQL 18.1 is newer than this version of Flyway and support has not been tested. The latest supported version of PostgreSQL is 15.
+2026-01-30T16:19:42.350+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.f.core.internal.command.DbValidate     : Successfully validated 3 migrations (execution time 00:00.059s)
+2026-01-30T16:19:42.376+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.f.core.internal.command.DbMigrate      : Current version of schema "public": 3
+2026-01-30T16:19:42.383+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.f.core.internal.command.DbMigrate      : Schema "public" is up to date. No migration necessary.
+2026-01-30T16:19:42.674+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-30T16:19:42.821+01:00  INFO 35696 --- [pki-souverain-backend] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.4.1.Final
+2026-01-30T16:19:42.907+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-01-30T16:19:43.478+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-30T16:19:43.611+01:00  WARN 35696 --- [pki-souverain-backend] [main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-30T16:19:46.494+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-30T16:19:46.607+01:00  INFO 35696 --- [pki-souverain-backend] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-30T16:19:49.608+01:00  WARN 35696 --- [pki-souverain-backend] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-30T16:19:49.800+01:00  WARN 35696 --- [pki-souverain-backend] [main] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: 37776eec-ce31-4395-8878-56473b01aa98
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-01-30T16:19:51.262+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 3 endpoint(s) beneath base path '/actuator'
+2026-01-30T16:19:51.520+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@615d74e9, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@648e25f2, org.springframework.security.web.context.SecurityContextHolderFilter@5c74025e, org.springframework.security.web.header.HeaderWriterFilter@6a5ed5f9, org.springframework.web.filter.CorsFilter@7b6824db, org.springframework.security.web.authentication.logout.LogoutFilter@feb0f52, cm.gov.pki.util.JwtAuthenticationFilter@3793896e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@64dd94ed, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1a0c384d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@509d0d21, org.springframework.security.web.session.SessionManagementFilter@3e60b1b, org.springframework.security.web.access.ExceptionTranslationFilter@7072606, org.springframework.security.web.access.intercept.AuthorizationFilter@60ab906e]
+2026-01-30T16:19:53.535+01:00  INFO 35696 --- [pki-souverain-backend] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/api'
+2026-01-30T16:19:53.588+01:00  INFO 35696 --- [pki-souverain-backend] [main] cm.gov.pki.PKISouverainApplication       : Started PKISouverainApplication in 20.383 seconds (process running for 21.594)
+2026-01-30T16:20:03.577+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/api]    : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-30T16:20:03.578+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-30T16:20:03.583+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-01-30T16:20:03.643+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing POST /auth/login
+2026-01-30T16:20:03.702+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-01-30T16:20:03.719+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured POST /auth/login
+2026-01-30T16:20:04.060+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] cm.gov.pki.service.AuthService           : 🔑 Tentative de connexion : {}
+2026-01-30T16:20:04.351+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-01-30T16:20:05.423+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] cm.gov.pki.service.AuditService          : 📋 AUDIT | User: japhetdjomo@gmail.com | Action: USER_LOGIN | Entity: User (2ff84121-a529-4c3e-a269-be14867c3c59)
+2026-01-30T16:20:05.629+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] cm.gov.pki.service.AuthService           : ✅ Connexion réussie : {}
+2026-01-30T16:20:05.669+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    /* insert for
+        cm.gov.pki.entity.AuditLog */insert 
+    into
+        audit_logs (action, created_at, details, entity_id, entity_type, ip_address, user_id, user_agent, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-30T16:20:05.702+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    /* update
+        for cm.gov.pki.entity.User */update users 
+    set
+        created_at=?,
+        email=?,
+        email_verified=?,
+        first_name=?,
+        is_active=?,
+        last_login=?,
+        last_name=?,
+        password_hash=?,
+        role=?,
+        updated_at=? 
+    where
+        id=?
+2026-01-30T16:20:05.828+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing OPTIONS /user/certificates
+2026-01-30T16:20:05.835+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing GET /user/certificates
+2026-01-30T16:20:05.946+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-01-30T16:20:05.957+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Secured GET /user/certificates
+2026-01-30T16:20:05.977+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-3] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.certificate_pem,
+        c1_0.created_at,
+        c1_0.fingerprint_sha256,
+        c1_0.issued_at,
+        c1_0.issued_by,
+        c1_0.issuer_dn,
+        c1_0.not_after,
+        c1_0.not_before,
+        c1_0.public_key_pem,
+        c1_0.request_id,
+        c1_0.revocation_reason,
+        c1_0.revoked_at,
+        c1_0.revoked_by,
+        c1_0.serial_number,
+        c1_0.status,
+        c1_0.subject_dn,
+        c1_0.updated_at,
+        c1_0.user_id 
+    from
+        certificates c1_0 
+    where
+        c1_0.user_id=? 
+    order by
+        c1_0.issued_at desc
+2026-01-30T16:20:10.228+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /user/certificates
+2026-01-30T16:20:10.247+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-01-30T16:20:10.258+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /user/certificates
+2026-01-30T16:20:10.276+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.certificate_pem,
+        c1_0.created_at,
+        c1_0.fingerprint_sha256,
+        c1_0.issued_at,
+        c1_0.issued_by,
+        c1_0.issuer_dn,
+        c1_0.not_after,
+        c1_0.not_before,
+        c1_0.public_key_pem,
+        c1_0.request_id,
+        c1_0.revocation_reason,
+        c1_0.revoked_at,
+        c1_0.revoked_by,
+        c1_0.serial_number,
+        c1_0.status,
+        c1_0.subject_dn,
+        c1_0.updated_at,
+        c1_0.user_id 
+    from
+        certificates c1_0 
+    where
+        c1_0.user_id=? 
+    order by
+        c1_0.issued_at desc
+2026-01-30T16:20:18.960+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /user/certificates
+2026-01-30T16:20:18.982+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-01-30T16:20:18.995+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Secured GET /user/certificates
+2026-01-30T16:20:19.007+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-7] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.certificate_pem,
+        c1_0.created_at,
+        c1_0.fingerprint_sha256,
+        c1_0.issued_at,
+        c1_0.issued_by,
+        c1_0.issuer_dn,
+        c1_0.not_after,
+        c1_0.not_before,
+        c1_0.public_key_pem,
+        c1_0.request_id,
+        c1_0.revocation_reason,
+        c1_0.revoked_at,
+        c1_0.revoked_by,
+        c1_0.serial_number,
+        c1_0.status,
+        c1_0.subject_dn,
+        c1_0.updated_at,
+        c1_0.user_id 
+    from
+        certificates c1_0 
+    where
+        c1_0.user_id=? 
+    order by
+        c1_0.issued_at desc
+2026-01-30T16:27:59.108+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T16:32:16.796+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T16:34:54.957+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /user/certificates
+2026-01-30T16:34:54.967+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-01-30T16:34:54.975+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Secured GET /user/certificates
+2026-01-30T16:34:54.982+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        c1_0.id,
+        c1_0.certificate_pem,
+        c1_0.created_at,
+        c1_0.fingerprint_sha256,
+        c1_0.issued_at,
+        c1_0.issued_by,
+        c1_0.issuer_dn,
+        c1_0.not_after,
+        c1_0.not_before,
+        c1_0.public_key_pem,
+        c1_0.request_id,
+        c1_0.revocation_reason,
+        c1_0.revoked_at,
+        c1_0.revoked_by,
+        c1_0.serial_number,
+        c1_0.status,
+        c1_0.subject_dn,
+        c1_0.updated_at,
+        c1_0.user_id 
+    from
+        certificates c1_0 
+    where
+        c1_0.user_id=? 
+    order by
+        c1_0.issued_at desc
+2026-01-30T16:35:06.516+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing POST /auth/login
+2026-01-30T16:35:06.523+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-01-30T16:35:06.524+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Secured POST /auth/login
+2026-01-30T16:35:06.536+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] cm.gov.pki.service.AuthService           : 🔑 Tentative de connexion : {}
+2026-01-30T16:35:06.545+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.email=?
+2026-01-30T16:35:07.435+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] cm.gov.pki.service.AuditService          : 📋 AUDIT | User: admin@admin.com | Action: USER_LOGIN | Entity: User (2a0feff7-fb40-494c-9207-08137b570686)
+2026-01-30T16:35:07.442+01:00  INFO 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] cm.gov.pki.service.AuthService           : ✅ Connexion réussie : {}
+2026-01-30T16:35:07.445+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    /* insert for
+        cm.gov.pki.entity.AuditLog */insert 
+    into
+        audit_logs (action, created_at, details, entity_id, entity_type, ip_address, user_id, user_agent, id) 
+    values
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-01-30T16:35:07.449+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] org.hibernate.SQL                        : 
+    /* update
+        for cm.gov.pki.entity.User */update users 
+    set
+        created_at=?,
+        email=?,
+        email_verified=?,
+        first_name=?,
+        is_active=?,
+        last_login=?,
+        last_name=?,
+        password_hash=?,
+        role=?,
+        updated_at=? 
+    where
+        id=?
+2026-01-30T16:35:07.473+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-3] o.s.security.web.FilterChainProxy        : Securing OPTIONS /admin/dashboard
+2026-01-30T16:35:07.480+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Securing GET /admin/dashboard
+2026-01-30T16:35:07.485+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-01-30T16:35:07.487+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] o.s.security.web.FilterChainProxy        : Secured GET /admin/dashboard
+2026-01-30T16:35:07.498+01:00 ERROR 35696 --- [pki-souverain-backend] [http-nio-8080-exec-4] c.g.p.exception.GlobalExceptionHandler   : ❌ Erreur serveur : 
+
+org.springframework.web.servlet.resource.NoResourceFoundException: No static resource admin/dashboard.
+	at org.springframework.web.servlet.resource.ResourceHttpRequestHandler.handleRequest(ResourceHttpRequestHandler.java:585) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter.handle(HttpRequestHandlerAdapter.java:52) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:903) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:564) ~[tomcat-embed-core-10.1.17.jar:6.0]
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658) ~[tomcat-embed-core-10.1.17.jar:6.0]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:205) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51) ~[tomcat-embed-websocket-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:110) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$FilterObservation$SimpleFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:479) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$1(ObservationFilterChainDecorator.java:340) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator.lambda$wrapSecured$0(ObservationFilterChainDecorator.java:82) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:128) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:131) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.session.SessionManagementFilter.doFilter(SessionManagementFilter.java:85) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at cm.gov.pki.util.JwtAuthenticationFilter.doFilterInternal(JwtAuthenticationFilter.java:51) ~[classes/:na]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:91) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:227) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.wrapFilter(ObservationFilterChainDecorator.java:240) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$AroundFilterObservation$SimpleAroundFilterObservation.lambda$wrap$0(ObservationFilterChainDecorator.java:323) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$ObservationFilter.doFilter(ObservationFilterChainDecorator.java:224) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.ObservationFilterChainDecorator$VirtualFilterChain.doFilter(ObservationFilterChainDecorator.java:137) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191) ~[spring-security-web-6.2.1.jar:6.2.1]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195) ~[spring-webmvc-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:225) ~[spring-security-config-6.2.1.jar:6.2.1]
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.springframework.web.filter.ServerHttpObservationFilter.doFilterInternal(ServerHttpObservationFilter.java:109) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116) ~[spring-web-6.1.2.jar:6.1.2]
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:174) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:149) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:482) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:340) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:391) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:896) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1744) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1191) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61) ~[tomcat-embed-core-10.1.17.jar:10.1.17]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[na:na]
+
+2026-01-30T16:54:25.766+01:00  WARN 35696 --- [pki-souverain-backend] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=16m13s392ms986µs700ns).
+2026-01-30T16:54:28.190+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-7] o.s.security.web.FilterChainProxy        : Securing GET /user/me
+2026-01-30T16:54:28.208+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-7] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-01-30T17:26:36.879+01:00  WARN 35696 --- [pki-souverain-backend] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=32m11s113ms444µs).
+2026-01-30T17:30:51.160+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-6] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T17:31:23.117+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-5] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T17:31:50.265+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T17:31:52.212+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-10] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T17:31:53.689+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
+2026-01-30T17:31:54.560+01:00 DEBUG 35696 --- [pki-souverain-backend] [http-nio-8080-exec-2] o.s.security.web.FilterChainProxy        : Securing OPTIONS /auth/register
