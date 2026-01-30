@@ -36,7 +36,12 @@ export default function LoginPage() {
     try {
       const response = await authService.login({ email, password });
       setUser(response.user);
-      // On ne navigue pas ici, le useEffect s'en charge après setUser
+      // Naviguer directement après connexion réussie
+      if (response.user.role === 'ADMIN') {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Email ou mot de passe invalide');
     } finally {
