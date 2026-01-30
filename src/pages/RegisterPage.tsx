@@ -35,10 +35,16 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
-      const user = await authService.register({ email, password, firstName, lastName });
-      setUser(user);
-      // Naviguer directement après inscription réussie (évite dépendance sur store update)
-      navigate('/login', { replace: true });
+      // 1) Création du compte
+      await authService.register({ email, password, firstName, lastName });
+      // 2) Auto-login pour entrer directement dans l'app
+      const loginResp = await authService.login({ email, password });
+      setUser(loginResp.user);
+      if (loginResp.user.role === 'ADMIN') {
+        navigate('/admin/dashboard', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription");
     } finally {
