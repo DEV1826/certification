@@ -103,7 +103,7 @@ export const authService = {
    * Inscription
    */
   register: async (data: RegisterRequest): Promise<User> => {
-    const response = await apiClient.post<User>('/api/auth/register', data);
+    const response = await apiClient.post<User>('/auth/register', data);
     return response.data;
   },
 
@@ -111,7 +111,7 @@ export const authService = {
    * Connexion
    */
   login: async (data: LoginRequest): Promise<JwtResponse> => {
-    const response = await apiClient.post<JwtResponse>('/api/auth/login', data);
+    const response = await apiClient.post<JwtResponse>('/auth/login', data);
     // Stocker les tokens
     localStorage.setItem('accessToken', response.data.accessToken);
     localStorage.setItem('refreshToken', response.data.refreshToken);
@@ -178,7 +178,7 @@ export const userService = {
    */
   downloadRequestDocument: (requestId: string, filename: string): string => {
     // Renvoie une URL utilisable dans la page (la même origine)
-    return `/api/user/certificate-requests/${requestId}/documents/${encodeURIComponent(filename)}`;
+    return `/user/certificate-requests/${requestId}/documents/${encodeURIComponent(filename)}`;
   },
 };
 
@@ -227,7 +227,7 @@ export const adminService = {
 
   downloadRequestDocument: (requestId: string, filename: string): string => {
     // retourne simplement l'URL relative (synchroniquement) — pas de fetch requis
-    return `/api/admin/certificate-requests/${requestId}/documents/${encodeURIComponent(filename)}`;
+    return `/admin/certificate-requests/${requestId}/documents/${encodeURIComponent(filename)}`;
   },
 
   approveRequest: async (id: string, validityDays = 365): Promise<any> => {
