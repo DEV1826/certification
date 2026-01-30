@@ -1,12 +1,10 @@
 package cm.gov.pki.config;
 
 import cm.gov.pki.service.AuthService;
-import cm.gov.pki.util.JwtAuthenticationFilter;
 import jakarta.servlet.Filter;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -19,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableMethodSecurity
@@ -43,9 +42,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:5173", "http://localhost:8080"));
+        
+        // Autorise localhost pour le dev et ton domaine Render pour la prod
+        configuration.setAllowedOrigins(Arrays.asList(
+            "http://localhost:5173", 
+            "http://localhost:3000",
+            "https://certification-6397.onrender.com" // <--- REMPLACE par ton URL frontend réelle sur Render
+        ));
+        
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
@@ -57,22 +63,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            // 1. Désactivation CSRF (nécessaire pour les APIs REST avec JWT)
             .csrf(csrf -> csrf.disable())
+            
+            // 2. Application de la config CORS
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            
+            // 3. Gestion de session Stateless
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
+            // 4. Gestion des erreurs d'authentification
             .exceptionHandling(exc -> exc
                 .authenticationEntryPoint((request, response, authException) -> {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                    response.getWriter().write("{\"error\": \"Non autorisé - Token manquant ou invalide\"}");
                 })
             )
+            
+            // 5. Règles d'autorisation
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/auth/**").permitAll()
+                // On autorise tout ce qui est sous /api/auth/ (register, login)
+                .requestMatchers("/api/auth/**").permitAll()
+                // Documentation et monitoring
                 .requestMatchers("/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/actuator/**").permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                // Sécurisation de l'administration
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                // Tout le reste nécessite d'être connecté
                 .anyRequest().authenticated()
             )
+            
+            // 6. Ajout du filtre JWT avant le filtre standard
             .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
