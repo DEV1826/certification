@@ -27,14 +27,16 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final AuditService auditService;
+    private final EmailService emailService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
 
     @Autowired
-    public AuthService(UserRepository userRepository, AuditService auditService) {
+    public AuthService(UserRepository userRepository, AuditService auditService, EmailService emailService) {
         this.userRepository = userRepository;
         this.auditService = auditService;
+        this.emailService = emailService;
     }
 
     @Value("${pki.jwt.secret}")
@@ -180,6 +182,56 @@ public class AuthService {
     private SecretKey getSigningKey() {
         byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
+    }
+
+    /**
+     * Demande de réinitialisation de mot de passe
+     */
+    @Transactional
+    public void requestPasswordReset(String email) {
+        log.info("Demande de réinitialisation du mot de passe pour: {}", email);
+        
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));
+
+        String resetToken = UUID.randomUUID().toString();
+        LocalDateTime expiresAt = LocalDateTime.now().plusHours(24);
+
+        user.setPasswordResetToken(resetToken);
+        user.setPasswordResetTokenExpiresAt(expiresAt);
+        userRepository.save(user);
+
+        emailService.sendPasswordResetEmail(email, user.getFirstName(), resetToken);
+        log.info("Email de réinitialisation envoyé à: {}", email);
+    }
+
+    /**
+     * Réinitialise le mot de passe avec un token
+     */
+    @Transactional
+    public void resetPassword(String resetToken, String newPassword) {
+        log.info("Tentative de réinitialisation du mot de passe avec token");
+
+        User user = userRepository.findByPasswordResetToken(resetToken)
+                .orElseThrow(() -> new RuntimeException("Token invalide ou expiré"));
+
+        // Vérifier l'expiration du token
+        if (user.getPasswordResetTokenExpiresAt() == null || 
+            LocalDateTime.now().isAfter(user.getPasswordResetTokenExpiresAt())) {
+            throw new RuntimeException("Token expiré");
+        }
+
+        // Mettre à jour le mot de passe
+        user.setPasswordHash(passwordEncoder.encode(newPassword));
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiresAt(null);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        // Envoyer un email de confirmation
+        emailService.sendPasswordResetConfirmationEmail(user.getEmail(), user.getFirstName());
+
+        log.info("Mot de passe réinitialisé avec succès pour: {}", user.getEmail());
     }
 
     /**

@@ -72,6 +72,12 @@ public class User {
 	@Column(name = "last_login")
 	private LocalDateTime lastLogin;
 
+	@Column(name = "password_reset_token")
+	private String passwordResetToken;
+
+	@Column(name = "password_reset_token_expires_at")
+	private LocalDateTime passwordResetTokenExpiresAt;
+
 	public UUID getId() {
 		return this.id;
 	}
@@ -118,6 +124,22 @@ public class User {
 
 	public String getEmail() {
 		return this.email;
+	}
+
+	public String getPasswordResetToken() {
+		return this.passwordResetToken;
+	}
+
+	public void setPasswordResetToken(String passwordResetToken) {
+		this.passwordResetToken = passwordResetToken;
+	}
+
+	public LocalDateTime getPasswordResetTokenExpiresAt() {
+		return this.passwordResetTokenExpiresAt;
+	}
+
+	public void setPasswordResetTokenExpiresAt(LocalDateTime passwordResetTokenExpiresAt) {
+		this.passwordResetTokenExpiresAt = passwordResetTokenExpiresAt;
 	}
 
 	public enum UserRole {

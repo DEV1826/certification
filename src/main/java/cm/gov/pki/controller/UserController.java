@@ -224,14 +224,16 @@ public class UserController {
 
     // DTO simplifié pour l'exposition API
     public static class CertificateDTO {
-        public String id;
-        public String serialNumber;
-        public String subjectDN;
-        public String issuerDN;
-        public String status;
-        public String notBefore;
-        public String notAfter;
-        public String certificatePem;
+        private String id;
+        private String serialNumber;
+        private String subjectDN;
+        private String issuerDN;
+        private String status;
+        private String notBefore;
+        private String notAfter;
+        private String certificatePem;
+
+        public CertificateDTO() {}
 
         public CertificateDTO(Certificate cert) {
             this.id = cert.getId().toString();
@@ -239,10 +241,35 @@ public class UserController {
             this.subjectDN = cert.getSubjectDN();
             this.issuerDN = cert.getIssuerDN();
             this.status = cert.getStatus().name();
-            this.notBefore = cert.getNotBefore() != null ? cert.getNotBefore().toString() : null;
-            this.notAfter = cert.getNotAfter() != null ? cert.getNotAfter().toString() : null;
+            this.notBefore = cert.getNotBefore() != null ? cert.getNotBefore().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
+            this.notAfter = cert.getNotAfter() != null ? cert.getNotAfter().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
             this.certificatePem = cert.getCertificatePem();
         }
+
+        // Getters and Setters
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public String getSerialNumber() { return serialNumber; }
+        public void setSerialNumber(String serialNumber) { this.serialNumber = serialNumber; }
+
+        public String getSubjectDN() { return subjectDN; }
+        public void setSubjectDN(String subjectDN) { this.subjectDN = subjectDN; }
+
+        public String getIssuerDN() { return issuerDN; }
+        public void setIssuerDN(String issuerDN) { this.issuerDN = issuerDN; }
+
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+
+        public String getNotBefore() { return notBefore; }
+        public void setNotBefore(String notBefore) { this.notBefore = notBefore; }
+
+        public String getNotAfter() { return notAfter; }
+        public void setNotAfter(String notAfter) { this.notAfter = notAfter; }
+
+        public String getCertificatePem() { return certificatePem; }
+        public void setCertificatePem(String certificatePem) { this.certificatePem = certificatePem; }
     }
 
     // Récupérer les demandes de certificat de l'utilisateur
@@ -257,9 +284,13 @@ public class UserController {
         return ResponseEntity.ok(dto);
     }
 
-    // Télécharger une pièce jointe
+    // Télécharger/Prévisualiser une pièce jointe
     @GetMapping("/certificate-requests/{id}/documents/{filename}")
-    public ResponseEntity<?> downloadDocument(Authentication authentication, @PathVariable("id") java.util.UUID id, @PathVariable("filename") String filename) {
+    public ResponseEntity<?> downloadDocument(
+            Authentication authentication, 
+            @PathVariable("id") java.util.UUID id, 
+            @PathVariable("filename") String filename,
+            @RequestParam(value = "preview", defaultValue = "false") boolean preview) {
         if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
             return ResponseEntity.status(401).build();
         }
@@ -274,8 +305,27 @@ public class UserController {
         if (!java.nio.file.Files.exists(path)) return ResponseEntity.status(404).build();
         try {
             org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(path.toUri());
+            // Déterminer le type MIME en fonction de l'extension du fichier
+            String contentType = "application/octet-stream"; // default
+            if (filename.endsWith(".pdf")) {
+                contentType = "application/pdf";
+            } else if (filename.endsWith(".jpg") || filename.endsWith(".jpeg")) {
+                contentType = "image/jpeg";
+            } else if (filename.endsWith(".png")) {
+                contentType = "image/png";
+            } else if (filename.endsWith(".gif")) {
+                contentType = "image/gif";
+            } else if (filename.endsWith(".txt")) {
+                contentType = "text/plain";
+            }
+            
+            // Si preview=true, utiliser "inline" (affichage dans le navigateur)
+            // Sinon, utiliser "attachment" (téléchargement)
+            String disposition = preview ? "inline" : "attachment";
+            
             return ResponseEntity.ok()
-                    .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
+                    .header(org.springframework.http.HttpHeaders.CONTENT_TYPE, contentType)
+                    .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, disposition + "; filename=\"" + filename + "\"")
                     .body(resource);
         } catch (java.net.MalformedURLException ex) {
             log.error("URL invalide pour le fichier {} du téléchargement {}", filename, id, ex);
@@ -288,17 +338,19 @@ public class UserController {
 
     // DTO pour les demandes
     public static class CertificateRequestDTO {
-        public String id;
-        public String commonName;
-        public String organization;
-        public String organizationalUnit;
-        public String locality;
-        public String state;
-        public String country;
-        public String email;
-        public String status;
-        public String submittedAt;
-        public String[] documents;
+        private String id;
+        private String commonName;
+        private String organization;
+        private String organizationalUnit;
+        private String locality;
+        private String state;
+        private String country;
+        private String email;
+        private String status;
+        private String submittedAt;
+        private String[] documents;
+
+        public CertificateRequestDTO() {}
 
         public CertificateRequestDTO(CertificateRequest r) {
             this.id = r.getId().toString();
@@ -310,9 +362,169 @@ public class UserController {
             this.country = r.getCountry();
             this.email = r.getEmail();
             this.status = r.getStatus();
-            this.submittedAt = r.getSubmittedAt() != null ? r.getSubmittedAt().toString() : null;
+            this.submittedAt = r.getSubmittedAt() != null ? r.getSubmittedAt().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
             this.documents = r.getDocuments() != null ? r.getDocuments().split(",") : new String[0];
         }
+
+        // Getters and Setters
+        public String getId() { return id; }
+        public void setId(String id) { this.id = id; }
+
+        public String getCommonName() { return commonName; }
+        public void setCommonName(String commonName) { this.commonName = commonName; }
+
+        public String getOrganization() { return organization; }
+        public void setOrganization(String organization) { this.organization = organization; }
+
+        public String getOrganizationalUnit() { return organizationalUnit; }
+        public void setOrganizationalUnit(String organizationalUnit) { this.organizationalUnit = organizationalUnit; }
+
+        public String getLocality() { return locality; }
+        public void setLocality(String locality) { this.locality = locality; }
+
+        public String getState() { return state; }
+        public void setState(String state) { this.state = state; }
+
+        public String getCountry() { return country; }
+        public void setCountry(String country) { this.country = country; }
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+
+        public String getStatus() { return status; }
+        public void setStatus(String status) { this.status = status; }
+
+        public String getSubmittedAt() { return submittedAt; }
+        public void setSubmittedAt(String submittedAt) { this.submittedAt = submittedAt; }
+
+        public String[] getDocuments() { return documents; }
+        public void setDocuments(String[] documents) { this.documents = documents; }
     }
+
+	/**
+	 * Valide le token d'un utilisateur et retourne le certificat signé
+	 * Endpoint: POST /user/certificate-requests/{requestId}/validate-token?token=...
+	 */
+	@PostMapping("/certificate-requests/{requestId}/validate-token")
+	public ResponseEntity<?> validateToken(
+			Authentication authentication,
+			@PathVariable("requestId") java.util.UUID requestId,
+			@RequestParam(value = "token") String token) {
+		
+		if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
+			return ResponseEntity.status(401).build();
+		}
+		
+		User user = (User) authentication.getPrincipal();
+		
+		// Récupérer la demande
+		var opt = certificateRequestRepository.findById(requestId);
+		if (opt.isEmpty()) {
+			return ResponseEntity.status(404).body(Map.of("error", "Request not found"));
+		}
+		
+		CertificateRequest req = opt.get();
+		
+		// Vérifier que l'utilisateur est propriétaire de la demande
+		if (!req.getUser().getId().equals(user.getId())) {
+			return ResponseEntity.status(403).body(Map.of("error", "Unauthorized"));
+		}
+		
+		// Vérifier que le status est ISSUED
+		if (!"ISSUED".equalsIgnoreCase(req.getStatus())) {
+			return ResponseEntity.status(400).body(Map.of("error", "Request is not in ISSUED state"));
+		}
+		
+		// Vérifier le token
+		if (req.getValidationToken() == null || !req.getValidationToken().equals(token)) {
+			return ResponseEntity.status(400).body(Map.of("error", "Invalid token"));
+		}
+		
+		// Vérifier que le token n'a pas expiré
+		if (req.getTokenExpiresAt() != null && 
+		    java.time.LocalDateTime.now().isAfter(req.getTokenExpiresAt())) {
+			return ResponseEntity.status(400).body(Map.of("error", "Token expired"));
+		}
+		
+		// Vérifier que le token n'a pas déjà été utilisé
+		if (req.getTokenUsedAt() != null) {
+			return ResponseEntity.status(400).body(Map.of("error", "Token already used"));
+		}
+		
+		// Marquer le token comme utilisé
+		req.setTokenUsedAt(java.time.LocalDateTime.now());
+		certificateRequestRepository.save(req);
+		
+		// Récupérer le certificat signé depuis la base de données
+		var cert = certificateRepository.findById(req.getId());
+		if (cert.isEmpty()) {
+			return ResponseEntity.status(404).body(Map.of("error", "Certificate not found"));
+		}
+		
+		Certificate certificate = cert.get();
+		
+		// Retourner le certificat
+		return ResponseEntity.ok(Map.of(
+			"certificateId", certificate.getId().toString(),
+			"certificate", certificate.getCertificatePem(),
+			"fingerprint", certificate.getFingerprintSha256(),
+			"issuedAt", certificate.getIssuedAt(),
+			"expiresAt", certificate.getNotAfter()
+		));
+	}
+
+	/**
+	 * Télécharger un certificat par ID
+	 * Endpoint: GET /user/certificates/{certificateId}/download
+	 */
+	@GetMapping("/certificates/{certificateId}/download")
+	public ResponseEntity<?> downloadCertificate(
+			Authentication authentication,
+			@PathVariable("certificateId") java.util.UUID certificateId,
+			@RequestParam(value = "format", defaultValue = "pem") String format) {
+		
+		if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
+			return ResponseEntity.status(401).build();
+		}
+		
+		User user = (User) authentication.getPrincipal();
+		
+		// Vérifier que le certificat appartient à l'utilisateur
+		var certOpt = certificateRepository.findById(certificateId);
+		if (certOpt.isEmpty()) {
+			return ResponseEntity.status(404).body(Map.of("error", "Certificate not found"));
+		}
+		
+		Certificate certificate = certOpt.get();
+		if (!certificate.getUser().getId().equals(user.getId())) {
+			return ResponseEntity.status(403).body(Map.of("error", "Unauthorized"));
+		}
+		
+		String content = certificate.getCertificatePem();
+		String fileName;
+		String contentType;
+		
+		if ("pem".equalsIgnoreCase(format)) {
+			fileName = "certificate-" + certificateId + ".pem";
+			contentType = "application/x-pem-file";
+		} else if ("crt".equalsIgnoreCase(format)) {
+			fileName = "certificate-" + certificateId + ".crt";
+			contentType = "application/x-x509-ca-cert";
+		} else {
+			return ResponseEntity.status(400).body(Map.of("error", "Invalid format"));
+		}
+		
+		try {
+			byte[] contentBytes = content.getBytes(java.nio.charset.StandardCharsets.UTF_8);
+			return ResponseEntity.ok()
+					.header(org.springframework.http.HttpHeaders.CONTENT_TYPE, contentType)
+					.header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+					.header(org.springframework.http.HttpHeaders.CONTENT_LENGTH, String.valueOf(contentBytes.length))
+					.body(contentBytes);
+		} catch (Exception ex) {
+			log.error("Erreur lors du téléchargement du certificat {}", certificateId, ex);
+			return ResponseEntity.status(500).body(Map.of("error", "Server error"));
+		}
+	}
 }
 

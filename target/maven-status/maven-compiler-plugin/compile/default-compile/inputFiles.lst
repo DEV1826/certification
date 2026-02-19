@@ -22,6 +22,7 @@ C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\repos
 C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\service\AuditService.java
 C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\service\EnvironmentKeystorePasswordService.java
 C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\entity\User.java
+C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\service\EmailService.java
 C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\entity\AuditLog.java
 C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\service\log.java
 C:\Users\COMPUTER STORES\Desktop\projet_s\backend\src\main\java\cm\gov\pki\repository\CertificateRepository.java

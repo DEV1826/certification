@@ -1,11 +1,13 @@
 package cm.gov.pki.controller;
 
 import cm.gov.pki.entity.CAConfiguration;
+import cm.gov.pki.entity.Certificate;
 import cm.gov.pki.repository.CAConfigurationRepository;
 import cm.gov.pki.repository.CertificateRepository;
 import cm.gov.pki.repository.CertificateRequestRepository;
 import cm.gov.pki.repository.UserRepository;
 import cm.gov.pki.service.CAService;
+import cm.gov.pki.service.EmailService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -26,17 +28,20 @@ public class AdminController {
 	private final CertificateRepository certificateRepository;
 	private final CertificateRequestRepository certificateRequestRepository;
 	private final CAService caService;
+	private final EmailService emailService;
 
 	public AdminController(CAConfigurationRepository caConfigurationRepository,
 						   UserRepository userRepository,
 						   CertificateRepository certificateRepository,
 						   CertificateRequestRepository certificateRequestRepository,
-						   CAService caService) {
+						   CAService caService,
+						   EmailService emailService) {
 		this.caConfigurationRepository = caConfigurationRepository;
 		this.userRepository = userRepository;
 		this.certificateRepository = certificateRepository;
 		this.certificateRequestRepository = certificateRequestRepository;
 		this.caService = caService;
+		this.emailService = emailService;
 	}
 
 	@GetMapping("/ca-status")
@@ -54,6 +59,61 @@ public class AdminController {
 		m.put("certificateRequests", certificateRequestRepository.count());
 		m.put("activeCA", caConfigurationRepository.findFirstByIsActiveTrueOrderByCreatedAtDesc().isPresent());
 		return ResponseEntity.ok(m);
+	}
+
+	@GetMapping("/dashboard")
+	public ResponseEntity<Map<String, Object>> getDashboard() {
+		try {
+			Map<String, Object> dashboard = new HashMap<>();
+			
+			// Compter les utilisateurs
+			long totalUsers = userRepository.count();
+			
+			// Compter les demandes en attente
+			long pendingRequests = certificateRequestRepository.countByStatus("PENDING");
+			
+			// Compter les certificats actifs
+			long activeCertificates = certificateRepository.countByStatus(Certificate.CertificateStatus.ACTIVE);
+			
+			// Compter les certificats révoqués
+			long revokedCertificates = certificateRepository.countByStatus(Certificate.CertificateStatus.REVOKED);
+			
+			// Récupérer le statut de l'AC
+			Map<String, Object> caStatus = new HashMap<>();
+			var caOpt = caConfigurationRepository.findTopByOrderByCreatedAtDesc();
+			if (caOpt.isPresent()) {
+				CAConfiguration ca = caOpt.get();
+				caStatus.put("isActive", ca.isActive != null ? ca.isActive : false);
+				caStatus.put("isInitialized", true);
+				caStatus.put("caName", ca.caName);
+				caStatus.put("validFrom", ca.validFrom != null ? ca.validFrom.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
+				caStatus.put("validUntil", ca.validUntil != null ? ca.validUntil.format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null);
+				
+				// Calculer les jours jusqu'à l'expiration
+				if (ca.validUntil != null) {
+					long daysUntilExpiration = java.time.temporal.ChronoUnit.DAYS.between(
+						java.time.LocalDateTime.now(),
+						ca.validUntil
+					);
+					caStatus.put("daysUntilExpiration", daysUntilExpiration);
+				}
+				caStatus.put("subjectDN", ca.getSubjectDN());
+			} else {
+				caStatus.put("isActive", false);
+				caStatus.put("isInitialized", false);
+			}
+			
+			dashboard.put("totalUsers", totalUsers);
+			dashboard.put("pendingRequests", pendingRequests);
+			dashboard.put("activeCertificates", activeCertificates);
+			dashboard.put("revokedCertificates", revokedCertificates);
+			dashboard.put("caStatus", caStatus);
+			
+			return ResponseEntity.ok(dashboard);
+		} catch (Exception ex) {
+			log.error("Erreur lors du chargement du dashboard", ex);
+			return ResponseEntity.status(500).body(Map.of("error", "Erreur serveur"));
+		}
 	}
 
 	@PostMapping("/generate-ca")
@@ -233,11 +293,23 @@ public class AdminController {
 			return ResponseEntity.status(400).body(java.util.Map.of("error", "No CSR provided for this request"));
 		}
 		String certPem = caService.signCSR(req.getCsrContent(), validityDays, req.getUser().getId());
+		
+		// Générer un token de validation
+		String validationToken = java.util.UUID.randomUUID().toString();
+		java.time.LocalDateTime tokenExpiresAt = java.time.LocalDateTime.now().plusHours(24);
+		
 		req.setStatus("ISSUED");
 		req.setReviewedAt(java.time.LocalDateTime.now());
 		req.setReviewedBy(admin);
+		req.setValidationToken(validationToken);
+		req.setTokenExpiresAt(tokenExpiresAt);
 		certificateRequestRepository.save(req);
-		return ResponseEntity.ok(java.util.Map.of("certificate", certPem));
+		
+		// Envoyer email avec le token
+		String userName = req.getUser().getFirstName() + " " + req.getUser().getLastName();
+		emailService.sendValidationTokenEmail(req.getUser().getEmail(), userName, id, validationToken);
+		
+		return ResponseEntity.ok(java.util.Map.of("certificate", certPem, "message", "Email de validation envoyé"));
 	}
 
 	@PostMapping("/certificate-requests/{id}/reject")
@@ -258,7 +330,120 @@ public class AdminController {
 		req.setReviewedAt(java.time.LocalDateTime.now());
 		req.setReviewedBy(admin);
 		certificateRequestRepository.save(req);
+		
+		// Envoyer email de rejet
+		String userName = req.getUser().getFirstName() + " " + req.getUser().getLastName();
+		emailService.sendRejectionEmail(req.getUser().getEmail(), userName, reason);
+		
 		return ResponseEntity.ok(java.util.Map.of("status", "rejected"));
+	}
+
+	@GetMapping("/users")
+	public ResponseEntity<?> listUsers(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "20") int size) {
+		try {
+			org.springframework.data.domain.Pageable pageable = org.springframework.data.domain.PageRequest.of(
+				Math.max(0, page), 
+				Math.max(1, size), 
+				org.springframework.data.domain.Sort.by(org.springframework.data.domain.Sort.Direction.DESC, "createdAt")
+			);
+			org.springframework.data.domain.Page<cm.gov.pki.entity.User> usersPage = userRepository.findAll(pageable);
+			var items = usersPage.getContent().stream().map(u -> new UserAdminDTO(u)).toList();
+			java.util.Map<String, Object> resp = new java.util.HashMap<>();
+			resp.put("items", items);
+			resp.put("total", usersPage.getTotalElements());
+			resp.put("page", usersPage.getNumber());
+			resp.put("size", usersPage.getSize());
+			resp.put("totalPages", usersPage.getTotalPages());
+			return ResponseEntity.ok(resp);
+		} catch (Exception ex) {
+			log.error("Erreur lors de la récupération des utilisateurs", ex);
+			return ResponseEntity.status(500).body(java.util.Map.of("error", "Erreur serveur"));
+		}
+	}
+
+	@DeleteMapping("/users/{userId}")
+	public ResponseEntity<?> deleteUser(
+			Authentication authentication,
+			@PathVariable("userId") java.util.UUID userId) {
+		try {
+			// Vérifier que l'administrateur n'essaie pas de se supprimer lui-même
+			if (authentication != null && authentication.getPrincipal() instanceof cm.gov.pki.entity.User) {
+				cm.gov.pki.entity.User admin = (cm.gov.pki.entity.User) authentication.getPrincipal();
+				if (admin.getId().equals(userId)) {
+					return ResponseEntity.status(400).body(java.util.Map.of("error", "Vous ne pouvez pas supprimer votre propre compte"));
+				}
+			}
+
+			// Récupérer l'utilisateur à supprimer
+			var userOpt = userRepository.findById(userId);
+			if (userOpt.isEmpty()) {
+				return ResponseEntity.status(404).body(java.util.Map.of("error", "Utilisateur non trouvé"));
+			}
+
+			cm.gov.pki.entity.User userToDelete = userOpt.get();
+
+			// Enregistrer dans l'audit
+			if (authentication != null && authentication.getPrincipal() instanceof cm.gov.pki.entity.User) {
+				cm.gov.pki.entity.User admin = (cm.gov.pki.entity.User) authentication.getPrincipal();
+				log.info("Suppression d'utilisateur : {} par {}", userToDelete.getEmail(), admin.getEmail());
+			}
+
+			// Supprimer les données de l'utilisateur avant sa suppression
+			// Cela évite les contraintes de clé étrangère
+			try {
+				// Supprimer tous les certificats de cet utilisateur
+				var userCertificates = certificateRepository.findByUserOrderByIssuedAtDesc(userToDelete);
+				if (userCertificates != null && !userCertificates.isEmpty()) {
+					certificateRepository.deleteAll(userCertificates);
+					log.info("Suppression de {} certificat(s) pour l'utilisateur {}", userCertificates.size(), userToDelete.getEmail());
+				}
+				
+				// Supprimer toutes les demandes de certificat de cet utilisateur
+				var userRequests = certificateRequestRepository.findByUserOrderBySubmittedAtDesc(userToDelete);
+				if (userRequests != null && !userRequests.isEmpty()) {
+					certificateRequestRepository.deleteAll(userRequests);
+					log.info("Suppression de {} demande(s) de certificat pour l'utilisateur {}", userRequests.size(), userToDelete.getEmail());
+				}
+			} catch (Exception e) {
+				log.warn("Erreur lors de la suppression des certificats de l'utilisateur {}: {}", userId, e.getMessage());
+				// Continuer malgré l'erreur pour essayer de supprimer l'utilisateur
+			}
+
+			// Supprimer l'utilisateur
+			userRepository.deleteById(userId);
+
+			return ResponseEntity.ok(java.util.Map.of("message", "Utilisateur supprimé avec succès"));
+		} catch (Exception ex) {
+			log.error("Erreur lors de la suppression de l'utilisateur {}", userId, ex);
+			return ResponseEntity.status(500).body(java.util.Map.of("error", "Erreur serveur: " + ex.getMessage()));
+		}
+	}
+
+	// DTO for admin user management
+	public static class UserAdminDTO {
+		public String id;
+		public String email;
+		public String firstName;
+		public String lastName;
+		public String role;
+		public Boolean isActive;
+		public Boolean emailVerified;
+		public String createdAt;
+		public String lastLogin;
+
+		public UserAdminDTO(cm.gov.pki.entity.User u) {
+			this.id = u.getId().toString();
+			this.email = u.getEmail();
+			this.firstName = u.getFirstName();
+			this.lastName = u.getLastName();
+			this.role = u.getRole().name();
+			this.isActive = u.getIsActive();
+			this.emailVerified = u.getEmailVerified();
+			this.createdAt = u.getCreatedAt() != null ? u.getCreatedAt().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
+			this.lastLogin = u.getLastLogin() != null ? u.getLastLogin().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
+		}
 	}
 
 	// DTO for admin listing/detail
@@ -297,8 +482,8 @@ public class AdminController {
 			this.country = r.getCountry();
 			this.email = r.getEmail();
 			this.status = r.getStatus();
-			this.submittedAt = r.getSubmittedAt() != null ? r.getSubmittedAt().toString() : null;
-			this.reviewedAt = r.getReviewedAt() != null ? r.getReviewedAt().toString() : null;
+			this.submittedAt = r.getSubmittedAt() != null ? r.getSubmittedAt().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
+			this.reviewedAt = r.getReviewedAt() != null ? r.getReviewedAt().format(java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME) : null;
 			this.reviewedById = r.getReviewedBy() != null ? r.getReviewedBy().getId().toString() : null;
 			this.reviewedByEmail = r.getReviewedBy() != null ? r.getReviewedBy().getEmail() : null;
 			this.rejectionReason = r.getRejectionReason();

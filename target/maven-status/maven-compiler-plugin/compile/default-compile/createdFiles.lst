@@ -4,10 +4,12 @@ cm\gov\pki\entity\AuditLog$Actions.class
 cm\gov\pki\repository\CAConfigurationRepository.class
 cm\gov\pki\service\AuditService.class
 cm\gov\pki\repository\CertificateRequestRepository.class
+cm\gov\pki\service\EmailService.class
 cm\gov\pki\service\KeystorePasswordService.class
 cm\gov\pki\controller\UserController$CertificateDTO.class
 cm\gov\pki\controller\UserController$CertificateRequestDTO.class
 cm\gov\pki\repository\UserRepository.class
+cm\gov\pki\controller\AdminController$UserAdminDTO.class
 cm\gov\pki\entity\User.class
 cm\gov\pki\service\EnvironmentKeystorePasswordService.class
 cm\gov\pki\dto\DashboardDTO$CAStatus.class
