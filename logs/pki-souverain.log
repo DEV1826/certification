@@ -12624,3 +12624,73 @@ Caused by: org.postgresql.util.PSQLException: ERREUR: UPDATE ou DELETE sur la ta
 	... 171 common frames omitted
 
 2026-02-19T18:20:11.835+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Securing GET /user/me
+2026-02-19T18:20:11.846+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-8] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expires_at,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-02-19T18:20:11.853+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-8] o.s.security.web.FilterChainProxy        : Secured GET /user/me
+2026-02-19T18:20:12.162+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Securing GET /admin/users?page=0&size=20
+2026-02-19T18:20:12.169+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expires_at,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    where
+        u1_0.id=?
+2026-02-19T18:20:12.174+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-9] o.s.security.web.FilterChainProxy        : Secured GET /admin/users?page=0&size=20
+2026-02-19T18:20:12.179+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-9] org.hibernate.SQL                        : 
+    /* <criteria> */ select
+        u1_0.id,
+        u1_0.created_at,
+        u1_0.email,
+        u1_0.email_verified,
+        u1_0.first_name,
+        u1_0.is_active,
+        u1_0.last_login,
+        u1_0.last_name,
+        u1_0.password_hash,
+        u1_0.password_reset_token,
+        u1_0.password_reset_token_expires_at,
+        u1_0.role,
+        u1_0.updated_at 
+    from
+        users u1_0 
+    order by
+        u1_0.created_at desc 
+    offset
+        ? rows 
+    fetch
+        first ? rows only
+2026-02-19T18:49:05.148+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.security.web.FilterChainProxy        : Securing GET /user/me
+2026-02-19T18:49:05.197+01:00 DEBUG 31116 --- [pki-souverain-backend] [http-nio-8080-exec-1] o.s.s.w.a.AnonymousAuthenticationFilter  : Set SecurityContextHolder to anonymous SecurityContext
+2026-02-19T19:50:38.682+01:00  WARN 31116 --- [pki-souverain-backend] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h2m48s585ms864µs100ns).
+2026-02-19T20:34:38.659+01:00  WARN 31116 --- [pki-souverain-backend] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=44m8s357ms216µs700ns).
+2026-02-19T20:41:46.999+01:00  WARN 31116 --- [pki-souverain-backend] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m8s243ms782µs200ns).
+2026-02-19T21:14:47.407+01:00  WARN 31116 --- [pki-souverain-backend] [HikariPool-1 housekeeper] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=27m325ms75µs100ns).
