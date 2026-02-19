@@ -1,0 +1,19 @@
+## Node / frontend
+/frontend-web/node_modules/
+/frontend-web/dist/
+
+## Java / backend
+/backend/target/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+
+# Env
+.env
+*.local
+
+# Logs
+*.log
