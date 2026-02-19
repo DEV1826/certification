@@ -1,24 +1,28 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import {
+  LayoutGrid, Award, FileText, CheckSquare, XCircle, Download,
+  BarChart3, RefreshCw, Key, LogOut, ChevronRight, Shield
+} from 'lucide-react';
 
 const userLinks = [
-  { to: '/dashboard', label: 'Tableau de bord' },
-  { to: '/certificates', label: 'Mes certificats' },
-  { to: '/generate-csr', label: 'Nouvelle demande' },
-  { to: '/requests', label: 'Suivi de demande' },
-  { to: '/revoke-certificate', label: 'Révoquer un certificat' },
-  { to: '/download-crl', label: 'Télécharger la CRL' },
+  { to: '/dashboard', label: 'Tableau de bord', icon: LayoutGrid },
+  { to: '/certificates', label: 'Mes certificats', icon: Award },
+  { to: '/generate-csr', label: 'Nouvelle demande', icon: FileText },
+  { to: '/requests', label: 'Suivi de demande', icon: CheckSquare },
+  { to: '/revoke-certificate', label: 'Révoquer certificat', icon: XCircle },
+  { to: '/download-crl', label: 'Télécharger CRL', icon: Download },
 ];
 
 const adminLinks = [
-  { to: '/admin/dashboard', label: 'Dashboard Admin' },
-  { to: '/admin/stats', label: 'Statistiques' },
-  { to: '/admin/requests', label: 'Gérer demandes' },
-  { to: '/admin/generate-ca', label: 'Générer CA' },
-  { to: '/admin/sign-csr', label: 'Signer une CSR' },
-  { to: '/admin/generate-crl', label: 'Générer/Faire pivoter la CRL' },
-  { to: '/admin/revoke-certificate', label: 'Révoquer un certificat' },
-  { to: '/admin/download-crl', label: 'Télécharger la CRL' },
+  { to: '/admin/dashboard', label: 'Dashboard', icon: LayoutGrid },
+  { to: '/admin/stats', label: 'Statistiques', icon: BarChart3 },
+  { to: '/admin/requests', label: 'Gérer demandes', icon: CheckSquare },
+  { to: '/admin/generate-ca', label: 'Générer AC', icon: Key },
+  { to: '/admin/sign-csr', label: 'Signer CSR', icon: Award },
+  { to: '/admin/generate-crl', label: 'CRL/Rotation', icon: RefreshCw },
+  { to: '/admin/revoke-certificate', label: 'Révoquer cert', icon: XCircle },
+  { to: '/admin/download-crl', label: 'Télécharger CRL', icon: Download },
 ];
 
 export default function Sidebar() {
@@ -32,34 +36,69 @@ export default function Sidebar() {
     navigate('/login', { replace: true });
   };
 
+  const isActive = (path: string) => location.pathname === path;
+
   return (
-    <aside className="w-64 bg-white border-r border-neutral-200 min-h-screen p-6">
-      <div className="mb-4 text-h4 font-bold text-primary-900">PKI Souverain</div>
+    <aside className="w-64 bg-white border-r border-neutral-200 min-h-screen flex flex-col p-6 shadow-sm">
+      {/* Logo */}
+      <div className="flex items-center space-x-3 mb-8">
+        <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-600 to-indigo-700">
+          <Shield className="h-6 w-6 text-white" />
+        </div>
+        <div>
+          <div className="text-lg font-bold text-neutral-900">PKI</div>
+          <div className="text-xs text-neutral-600">Souverain</div>
+        </div>
+      </div>
+
+      {/* Role Badge */}
       {user?.role === 'ADMIN' ? (
-        <div className="mb-6 px-3 py-2 rounded bg-red-50 text-red-700 font-semibold text-center text-body-small border border-red-200">
-          Espace Administrateur
+        <div className="mb-6 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-center">
+          <div className="text-xs font-bold text-red-700">👨‍💼 ADMINISTRATEUR</div>
+          <div className="text-xs text-red-600 mt-0.5">{user?.email}</div>
         </div>
       ) : (
-        <div className="mb-6 px-3 py-2 rounded bg-blue-50 text-blue-700 font-semibold text-center text-body-small border border-blue-200">
-          Espace Utilisateur
+        <div className="mb-6 px-3 py-2 rounded-lg bg-blue-50 border border-blue-200 text-center">
+          <div className="text-xs font-bold text-blue-700">👤 UTILISATEUR</div>
+          <div className="text-xs text-blue-600 mt-0.5">{user?.email}</div>
         </div>
       )}
-      <nav className="flex flex-col space-y-2 mb-8">
-        {links.map((link) => (
-          <Link
-            key={link.to}
-            to={link.to}
-            className={`px-4 py-2 rounded transition-fast font-medium ${location.pathname === link.to ? 'bg-primary-100 text-primary-800' : 'text-neutral-700 hover:bg-neutral-100'}`}
-          >
-            {link.label}
-          </Link>
-        ))}
+
+      {/* Navigation Links */}
+      <nav className="flex-1 space-y-2 mb-8">
+        {links.map((link) => {
+          const Icon = link.icon;
+          const active = isActive(link.to);
+          return (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`
+                flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200
+                ${active
+                  ? 'bg-indigo-50 text-indigo-700 font-semibold shadow-sm border border-indigo-200'
+                  : 'text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900'
+                }
+              `}
+            >
+              <Icon size={18} className="flex-shrink-0" />
+              <span className="text-sm font-medium">{link.label}</span>
+              {active && <ChevronRight size={16} className="ml-auto" />}
+            </Link>
+          );
+        })}
       </nav>
+
+      {/* Separator */}
+      <div className="border-t border-neutral-200 mb-6" />
+
+      {/* Logout Button */}
       <button
         onClick={handleLogout}
-        className="mt-auto w-full px-4 py-2 bg-red-100 text-red-700 rounded transition-fast font-medium hover:bg-red-200"
+        className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 font-medium transition-all duration-200 border border-red-200 hover:border-red-300"
       >
-        Déconnexion
+        <LogOut size={18} className="flex-shrink-0" />
+        <span className="text-sm">Déconnexion</span>
       </button>
     </aside>
   );

@@ -126,6 +126,22 @@ export const authService = {
     localStorage.removeItem('refreshToken');
     window.location.href = '/login';
   },
+
+  /**
+   * Demande de réinitialisation de mot de passe
+   */
+  forgotPassword: async (email: string): Promise<any> => {
+    const response = await apiClient.post<any>('/auth/forgot-password', { email });
+    return response.data;
+  },
+
+  /**
+   * Réinitialise le mot de passe
+   */
+  resetPassword: async (token: string, password: string): Promise<any> => {
+    const response = await apiClient.post<any>('/auth/reset-password', { token, password });
+    return response.data;
+  },
 };
 
 export interface Certificate {
@@ -174,11 +190,14 @@ export const userService = {
   },
 
   /**
-   * Télécharger une pièce jointe
+   * Télécharger un certificat par ID
    */
-  downloadRequestDocument: (requestId: string, filename: string): string => {
-    // Renvoie une URL utilisable dans la page (la même origine)
-    return `/api/user/certificate-requests/${requestId}/documents/${encodeURIComponent(filename)}`;
+  downloadCertificate: async (certificateId: string, format: 'pem' | 'crt' = 'pem'): Promise<Blob> => {
+    const response = await apiClient.get(`/user/certificates/${certificateId}/download`, {
+      params: { format },
+      responseType: 'blob'
+    });
+    return response.data as Blob;
   },
 };
 
@@ -237,6 +256,20 @@ export const adminService = {
 
   rejectRequest: async (id: string, reason?: string): Promise<any> => {
     const response = await apiClient.post(`/admin/certificate-requests/${id}/reject`, null, { params: { reason } });
+    return response.data;
+  },
+
+  /**
+   * User management (admin)
+   */
+  getUsers: async (page = 0, size = 20): Promise<{ items: any[]; total: number; page: number; size: number; totalPages: number }> => {
+    const params = { page: String(page), size: String(size) };
+    const response = await apiClient.get<any>(`/admin/users`, { params });
+    return response.data;
+  },
+
+  deleteUser: async (userId: string): Promise<any> => {
+    const response = await apiClient.delete<any>(`/admin/users/${userId}`);
     return response.data;
   },
 };

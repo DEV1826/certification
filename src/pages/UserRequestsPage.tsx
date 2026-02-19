@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react';
 import { userService } from '../services/api';
 
+interface RequestDocument {
+  filename: string;
+  requestId: string;
+}
+
 export default function UserRequestsPage() {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -12,6 +17,23 @@ export default function UserRequestsPage() {
       .catch(() => setError('Erreur lors du chargement des demandes.'))
       .finally(() => setLoading(false));
   }, []);
+
+  // Visualiser un document (ouvrir dans nouvel onglet)
+  const previewDocument = (doc: RequestDocument) => {
+    const url = `/api/user/certificate-requests/${doc.requestId}/documents/${encodeURIComponent(doc.filename)}?preview=true`;
+    window.open(url, '_blank');
+  };
+
+  // Télécharger un document
+  const downloadDocument = (doc: RequestDocument) => {
+    const url = `/api/user/certificate-requests/${doc.requestId}/documents/${encodeURIComponent(doc.filename)}`;
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = doc.filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="max-w-4xl mx-auto py-8">
@@ -37,11 +59,24 @@ export default function UserRequestsPage() {
               {r.documents && r.documents.length > 0 && (
                 <div className="mt-3">
                   <div className="text-sm font-semibold mb-2">Pièces jointes</div>
-                  <ul className="space-y-1">
+                  <ul className="space-y-2">
                     {r.documents.map((d:string) => (
-                      <li key={d} className="flex items-center justify-between">
-                        <div className="text-sm text-neutral-700">{d}</div>
-                        <a className="text-primary-800 underline" href={`/api/user/certificate-requests/${r.id}/documents/${encodeURIComponent(d)}`} target="_blank" rel="noreferrer">Télécharger</a>
+                      <li key={d} className="flex items-center justify-between bg-neutral-50 p-2 rounded">
+                        <div className="text-sm text-neutral-700 truncate flex-1">{d}</div>
+                        <div className="flex gap-2 ml-2">
+                          <button 
+                            onClick={() => previewDocument({ filename: d, requestId: r.id })}
+                            className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                          >
+                            Visualiser
+                          </button>
+                          <button 
+                            onClick={() => downloadDocument({ filename: d, requestId: r.id })}
+                            className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
+                          >
+                            Télécharger
+                          </button>
+                        </div>
                       </li>
                     ))}
                   </ul>

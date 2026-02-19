@@ -6,18 +6,22 @@ import Sidebar from './components/Sidebar';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardUserPage from './pages/DashboardUserPage';
 import DashboardAdminPage from './pages/DashboardAdminPage';
 import UserCertificatesPage from './pages/UserCertificatesPage';
 import UserGenerateCsrPage from './pages/UserGenerateCsrPage';
 import UserRevokeCertificatePage from './pages/UserRevokeCertificatePage';
 import UserDownloadCrlPage from './pages/UserDownloadCrlPage';
+import UserValidateTokenPage from './pages/UserValidateTokenPage';
 import AdminStatsPage from './pages/AdminStatsPage';
 import AdminGenerateCaPage from './pages/AdminGenerateCaPage';
 import AdminSignCsrPage from './pages/AdminSignCsrPage';
 import AdminGenerateCrlPage from './pages/AdminGenerateCrlPage';
 import AdminRevokeCertificatePage from './pages/AdminRevokeCertificatePage';
 import AdminDownloadCrlPage from './pages/AdminDownloadCrlPage';
+import AdminManageUsersPage from './pages/AdminManageUsersPage';
 import { AdminRequestsList, AdminRequestDetail, UserRequestsPage } from './pages';
 import { ToastProvider } from './components/Toast';
 // Hydratation du store auth au chargement de l'app
@@ -56,6 +60,9 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/validate-token" element={<UserValidateTokenPage />} />
 
         {/* Layout avec sidebar pour toutes les routes protégées */}
         <Route
@@ -79,6 +86,7 @@ function App() {
           {/* Admin */}
           <Route path="/admin/dashboard" element={<DashboardAdminPage />} />
           <Route path="/admin/stats" element={<AdminStatsPage />} />
+          <Route path="/admin/manage-users" element={<AdminManageUsersPage />} />
           <Route path="/admin/generate-ca" element={<AdminGenerateCaPage />} />
           <Route path="/admin/sign-csr" element={<AdminSignCsrPage />} />
           <Route path="/admin/generate-crl" element={<AdminGenerateCrlPage />} />

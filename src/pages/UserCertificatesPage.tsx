@@ -5,6 +5,7 @@ export default function UserCertificatesPage() {
   const [cert, setCert] = useState<Certificate | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState<'pem' | 'crt' | null>(null);
 
   useEffect(() => {
     userService.getMyCertificates()
@@ -18,6 +19,29 @@ export default function UserCertificatesPage() {
     if (!dateStr) return '';
     const d = new Date(dateStr);
     return d.toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  // Fonction de téléchargement
+  async function downloadCertificate(format: 'pem' | 'crt') {
+    if (!cert || !cert.id) return;
+    
+    try {
+      setDownloading(format as any);
+      const blob = await userService.downloadCertificate(cert.id, format);
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `certificate-${cert.id}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (err) {
+      setError("Erreur lors du téléchargement du certificat.");
+      console.error(err);
+    } finally {
+      setDownloading(null);
+    }
   }
 
   return (
@@ -90,15 +114,21 @@ export default function UserCertificatesPage() {
           {/* Téléchargement */}
           <div className="bg-white rounded-2xl shadow p-6 border border-neutral-100 mb-2">
             <div className="text-h4 font-semibold mb-3">Télécharger le certificat</div>
-            <button className="w-full flex items-center gap-2 justify-center bg-primary-800 hover:bg-primary-900 text-white font-semibold py-2.5 rounded-lg mb-2 transition">
+            <button 
+              onClick={() => downloadCertificate('crt')}
+              disabled={downloading !== null}
+              className="w-full flex items-center gap-2 justify-center bg-primary-800 hover:bg-primary-900 text-white font-semibold py-2.5 rounded-lg mb-2 transition disabled:opacity-50 disabled:cursor-not-allowed">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 4v12m0 0l-4-4m4 4l4-4" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/><rect x="4" y="18" width="16" height="2" rx="1" fill="#fff"/></svg>
-              Certificat (.crt)
+              {downloading === 'crt' ? 'Téléchargement...' : 'Certificat (.crt)'}
             </button>
-            <button className="w-full flex items-center gap-2 justify-center border-2 border-primary-800 text-primary-800 font-semibold py-2.5 rounded-lg hover:bg-primary-50 transition">
+            <button 
+              onClick={() => downloadCertificate('pem')}
+              disabled={downloading !== null}
+              className="w-full flex items-center gap-2 justify-center border-2 border-primary-800 text-primary-800 font-semibold py-2.5 rounded-lg hover:bg-primary-50 transition disabled:opacity-50 disabled:cursor-not-allowed">
               <svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke="#1e40af" strokeWidth="2"/><path d="M8 12h8M8 16h8M8 8h8" stroke="#1e40af" strokeWidth="2" strokeLinecap="round"/></svg>
-              Archive PKCS#12 (.p12)
+              {downloading === 'pem' ? 'Téléchargement...' : 'Certificat (.pem)'}
             </button>
-            <div className="text-xs text-neutral-500 mt-2">Le fichier .p12 contient votre certificat et votre clé privée. Conservez-le en lieu sûr.</div>
+            <div className="text-xs text-neutral-500 mt-2">Le fichier .crt est compatible avec la plupart des navigateurs et applications.</div>
           </div>
           {/* Conformité */}
           <div className="bg-white rounded-2xl shadow p-5 border border-neutral-100">
