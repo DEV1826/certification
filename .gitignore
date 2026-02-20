@@ -1,9 +1,19 @@
 ## Node / frontend
 /frontend-web/node_modules/
 /frontend-web/dist/
+/frontend-web/target/
 
 ## Java / backend
 /backend/target/
+
+# PKI materials / uploads
+/backend/ca-store/
+/frontend-web/ca-store/
+/backend/uploads/
+/frontend-web/uploads/
+*.pem
+*.p12
+*.crt
 
 # IDE / OS
 .idea/

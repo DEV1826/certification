@@ -1,4 +1,4 @@
-package cm.gov.pki.controller;
+﻿package cm.gov.pki.controller;
 
 import cm.gov.pki.dto.AuthDTO;
 import cm.gov.pki.entity.User;
@@ -53,7 +53,7 @@ public class UserController {
 	}
 
 	/**
-	 * Récupère les certificats de l'utilisateur connecté
+	 * RÃ©cupÃ¨re les certificats de l'utilisateur connectÃ©
 	 */
 	@GetMapping("/certificates")
 	public ResponseEntity<?> getMyCertificates(Authentication authentication) {
@@ -62,14 +62,14 @@ public class UserController {
 		}
 		User user = (User) authentication.getPrincipal();
 		var certs = certificateRepository.findByUserOrderByIssuedAtDesc(user);
-		// Mapper vers un DTO simplifié pour éviter d'exposer tout l'objet
+		// Mapper vers un DTO simplifiÃ© pour Ã©viter d'exposer tout l'objet
 		var result = certs.stream().map(cert -> new CertificateDTO(cert)).toList();
 		return ResponseEntity.ok(result);
 	}
 
     /**
      * Soumettre une nouvelle demande de certificat
-     * Accepte un CSR (texte) et des pièces justificatives en multipart
+     * Accepte un CSR (texte) et des piÃ¨ces justificatives en multipart
      */
     @PostMapping(value = "/certificate-requests", consumes = {"multipart/form-data"})
     public ResponseEntity<?> submitCertificateRequest(
@@ -100,7 +100,7 @@ public class UserController {
         if ((csr == null || csr.isBlank()) && (csrFile == null || csrFile.isEmpty())) {
             return ResponseEntity.status(400).body(java.util.Map.of("error", "Un CSR est requis (texte ou fichier)"));
         }
-        // Si CSR texte absent mais fichier présent, lire le fichier
+        // Si CSR texte absent mais fichier prÃ©sent, lire le fichier
         if ((csr == null || csr.isBlank()) && csrFile != null && !csrFile.isEmpty()) {
             try {
                 long csrSize = csrFile.getSize();
@@ -150,13 +150,13 @@ public class UserController {
             return ResponseEntity.status(400).body(java.util.Map.of("error", "Ville (L) est requise"));
         }
         if (req.getCountry() == null || !req.getCountry().matches("^[A-Za-z]{2}$")) {
-            return ResponseEntity.status(400).body(java.util.Map.of("error", "Pays (C) doit être un code ISO 2 lettres"));
+            return ResponseEntity.status(400).body(java.util.Map.of("error", "Pays (C) doit Ãªtre un code ISO 2 lettres"));
         }
 
         req.setStatus("PENDING");
         req.setSubmittedAt(java.time.LocalDateTime.now());
 
-        // Validation des fichiers fournis (types autorisés et taille max)
+        // Validation des fichiers fournis (types autorisÃ©s et taille max)
         final long MAX_FILE_SIZE = 5L * 1024L * 1024L; // 5MB
         final java.util.List<String> ALLOWED_TYPES = java.util.List.of("application/pdf", "image/png", "image/jpeg", "image/jpg", "image/gif", "text/plain");
 
@@ -200,17 +200,17 @@ public class UserController {
                 // Stocker la liste des fichiers dans la colonne documents (CSV)
                 if (!saved.isEmpty()) {
                     req.setDocuments(String.join(",", saved));
-                    // Enregistrer aussi dans notes la liste pour référence
+                    // Enregistrer aussi dans notes la liste pour rÃ©fÃ©rence
                     req.setNotes(String.join(",", saved));
                     req = certificateRequestRepository.save(req);
                 }
             } catch (java.io.IOException ex) {
-                // En cas d'erreur d'E/S, supprimer la demande créée pour éviter les orphelins
+                // En cas d'erreur d'E/S, supprimer la demande crÃ©Ã©e pour Ã©viter les orphelins
                 log.error("Erreur lors de l'enregistrement des fichiers de la demande {}", req.getId(), ex);
                 try {
                     certificateRequestRepository.delete(req);
                 } catch (Exception delEx) {
-                    log.warn("Impossible de supprimer la demande après échec de sauvegarde des fichiers {}", req.getId(), delEx);
+                    log.warn("Impossible de supprimer la demande aprÃ¨s Ã©chec de sauvegarde des fichiers {}", req.getId(), delEx);
                 }
                 return ResponseEntity.status(500).body(java.util.Map.of("error", "Erreur lors de l'enregistrement des fichiers"));
             } catch (RuntimeException ex) {
@@ -222,7 +222,7 @@ public class UserController {
         return ResponseEntity.ok(Map.of("requestId", req.getId().toString(), "status", req.getStatus()));
     }
 
-    // DTO simplifié pour l'exposition API
+    // DTO simplifiÃ© pour l'exposition API
     public static class CertificateDTO {
         private String id;
         private String serialNumber;
@@ -272,7 +272,7 @@ public class UserController {
         public void setCertificatePem(String certificatePem) { this.certificatePem = certificatePem; }
     }
 
-    // Récupérer les demandes de certificat de l'utilisateur
+    // RÃ©cupÃ©rer les demandes de certificat de l'utilisateur
     @GetMapping("/certificate-requests")
     public ResponseEntity<?> getMyRequests(Authentication authentication) {
         if (authentication == null || !(authentication.getPrincipal() instanceof User)) {
@@ -284,7 +284,7 @@ public class UserController {
         return ResponseEntity.ok(dto);
     }
 
-    // Télécharger/Prévisualiser une pièce jointe
+    // TÃ©lÃ©charger/PrÃ©visualiser une piÃ¨ce jointe
     @GetMapping("/certificate-requests/{id}/documents/{filename}")
     public ResponseEntity<?> downloadDocument(
             Authentication authentication, 
@@ -305,7 +305,7 @@ public class UserController {
         if (!java.nio.file.Files.exists(path)) return ResponseEntity.status(404).build();
         try {
             org.springframework.core.io.Resource resource = new org.springframework.core.io.UrlResource(path.toUri());
-            // Déterminer le type MIME en fonction de l'extension du fichier
+            // DÃ©terminer le type MIME en fonction de l'extension du fichier
             String contentType = "application/octet-stream"; // default
             if (filename.endsWith(".pdf")) {
                 contentType = "application/pdf";
@@ -320,7 +320,7 @@ public class UserController {
             }
             
             // Si preview=true, utiliser "inline" (affichage dans le navigateur)
-            // Sinon, utiliser "attachment" (téléchargement)
+            // Sinon, utiliser "attachment" (tÃ©lÃ©chargement)
             String disposition = preview ? "inline" : "attachment";
             
             return ResponseEntity.ok()
@@ -328,7 +328,7 @@ public class UserController {
                     .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, disposition + "; filename=\"" + filename + "\"")
                     .body(resource);
         } catch (java.net.MalformedURLException ex) {
-            log.error("URL invalide pour le fichier {} du téléchargement {}", filename, id, ex);
+            log.error("URL invalide pour le fichier {} du tÃ©lÃ©chargement {}", filename, id, ex);
             return ResponseEntity.status(400).body(java.util.Map.of("error", "Nom de fichier invalide"));
         } catch (RuntimeException ex) {
             log.error("Erreur lors du chargement de la ressource {} pour la demande {}", filename, id, ex);
@@ -402,7 +402,7 @@ public class UserController {
     }
 
 	/**
-	 * Valide le token d'un utilisateur et retourne le certificat signé
+	 * Valide le token d'un utilisateur et retourne le certificat signÃ©
 	 * Endpoint: POST /user/certificate-requests/{requestId}/validate-token?token=...
 	 */
 	@PostMapping("/certificate-requests/{requestId}/validate-token")
@@ -417,7 +417,7 @@ public class UserController {
 		
 		User user = (User) authentication.getPrincipal();
 		
-		// Récupérer la demande
+		// RÃ©cupÃ©rer la demande
 		var opt = certificateRequestRepository.findById(requestId);
 		if (opt.isEmpty()) {
 			return ResponseEntity.status(404).body(Map.of("error", "Request not found"));
@@ -425,38 +425,38 @@ public class UserController {
 		
 		CertificateRequest req = opt.get();
 		
-		// Vérifier que l'utilisateur est propriétaire de la demande
+		// VÃ©rifier que l'utilisateur est propriÃ©taire de la demande
 		if (!req.getUser().getId().equals(user.getId())) {
 			return ResponseEntity.status(403).body(Map.of("error", "Unauthorized"));
 		}
 		
-		// Vérifier que le status est ISSUED
+		// VÃ©rifier que le status est ISSUED
 		if (!"ISSUED".equalsIgnoreCase(req.getStatus())) {
 			return ResponseEntity.status(400).body(Map.of("error", "Request is not in ISSUED state"));
 		}
 		
-		// Vérifier le token
+		// VÃ©rifier le token
 		if (req.getValidationToken() == null || !req.getValidationToken().equals(token)) {
 			return ResponseEntity.status(400).body(Map.of("error", "Invalid token"));
 		}
 		
-		// Vérifier que le token n'a pas expiré
+		// VÃ©rifier que le token n'a pas expirÃ©
 		if (req.getTokenExpiresAt() != null && 
 		    java.time.LocalDateTime.now().isAfter(req.getTokenExpiresAt())) {
 			return ResponseEntity.status(400).body(Map.of("error", "Token expired"));
 		}
 		
-		// Vérifier que le token n'a pas déjà été utilisé
+		// VÃ©rifier que le token n'a pas dÃ©jÃ  Ã©tÃ© utilisÃ©
 		if (req.getTokenUsedAt() != null) {
 			return ResponseEntity.status(400).body(Map.of("error", "Token already used"));
 		}
 		
-		// Marquer le token comme utilisé
+		// Marquer le token comme utilisÃ©
 		req.setTokenUsedAt(java.time.LocalDateTime.now());
 		certificateRequestRepository.save(req);
 		
-		// Récupérer le certificat signé depuis la base de données
-		var cert = certificateRepository.findById(req.getId());
+		// RÃ©cupÃ©rer le certificat signÃ© depuis la base de donnÃ©es
+		var cert = certificateRepository.findFirstByRequestId(req.getId());
 		if (cert.isEmpty()) {
 			return ResponseEntity.status(404).body(Map.of("error", "Certificate not found"));
 		}
@@ -474,7 +474,7 @@ public class UserController {
 	}
 
 	/**
-	 * Télécharger un certificat par ID
+	 * TÃ©lÃ©charger un certificat par ID
 	 * Endpoint: GET /user/certificates/{certificateId}/download
 	 */
 	@GetMapping("/certificates/{certificateId}/download")
@@ -489,7 +489,7 @@ public class UserController {
 		
 		User user = (User) authentication.getPrincipal();
 		
-		// Vérifier que le certificat appartient à l'utilisateur
+		// VÃ©rifier que le certificat appartient Ã  l'utilisateur
 		var certOpt = certificateRepository.findById(certificateId);
 		if (certOpt.isEmpty()) {
 			return ResponseEntity.status(404).body(Map.of("error", "Certificate not found"));
@@ -522,8 +522,9 @@ public class UserController {
 					.header(org.springframework.http.HttpHeaders.CONTENT_LENGTH, String.valueOf(contentBytes.length))
 					.body(contentBytes);
 		} catch (Exception ex) {
-			log.error("Erreur lors du téléchargement du certificat {}", certificateId, ex);
+			log.error("Erreur lors du tÃ©lÃ©chargement du certificat {}", certificateId, ex);
 			return ResponseEntity.status(500).body(Map.of("error", "Server error"));
 		}
 	}
 }
+

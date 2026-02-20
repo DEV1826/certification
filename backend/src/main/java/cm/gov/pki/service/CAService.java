@@ -1,4 +1,4 @@
-package cm.gov.pki.service;
+﻿package cm.gov.pki.service;
 
 import cm.gov.pki.entity.CAConfiguration;
 import cm.gov.pki.entity.Certificate;
@@ -151,15 +151,24 @@ public class CAService {
 
         } catch (Exception e) {
             log.error("Failed to generate root CA", e);
-            throw new RuntimeException("Échec génération AC: " + e.getMessage(), e);
+            throw new RuntimeException("Ã‰chec gÃ©nÃ©ration AC: " + e.getMessage(), e);
         }
     }
 
-    /**
+        /**
      * Sign a CSR (PEM) using the active CA and persist the issued certificate.
      */
     @Transactional
     public String signCSR(String csrPem, int validityDays, java.util.UUID userId) {
+        return signCSR(csrPem, validityDays, userId, null);
+    }
+
+    /**
+     * Sign a CSR (PEM) using the active CA and persist the issued certificate.
+     * Optionally links the certificate to a certificate request.
+     */
+    @Transactional
+    public String signCSR(String csrPem, int validityDays, java.util.UUID userId, java.util.UUID requestId) {
         try {
             CAConfiguration ca = caConfigurationRepository.findFirstByIsActiveTrueOrderByCreatedAtDesc()
                     .orElseThrow(() -> new RuntimeException("Aucune AC active trouvée"));
@@ -181,31 +190,31 @@ public class CAService {
                 csr = (PKCS10CertificationRequest) p.readObject();
             }
 
-                JcaPKCS10CertificationRequest jcaRequest = new JcaPKCS10CertificationRequest(csr);
+            JcaPKCS10CertificationRequest jcaRequest = new JcaPKCS10CertificationRequest(csr);
 
-                BigInteger serial = BigInteger.valueOf(Math.abs(new SecureRandom().nextLong()));
-                Date notBefore = Date.from(Instant.now().minusSeconds(60));
-                Date notAfter = Date.from(Instant.now().plusSeconds((long) validityDays * 24 * 3600));
+            BigInteger serial = BigInteger.valueOf(Math.abs(new SecureRandom().nextLong()));
+            Date notBefore = Date.from(Instant.now().minusSeconds(60));
+            Date notAfter = Date.from(Instant.now().plusSeconds((long) validityDays * 24 * 3600));
 
-                // Convert issuer and subject to X500Name (BouncyCastle types) to match constructor
-                X500Name issuerName = X500Name.getInstance(caCert.getSubjectX500Principal().getEncoded());
-                X500Name subjectName = X500Name.getInstance(jcaRequest.getSubject().getEncoded());
+            // Convert issuer and subject to X500Name (BouncyCastle types) to match constructor
+            X500Name issuerName = X500Name.getInstance(caCert.getSubjectX500Principal().getEncoded());
+            X500Name subjectName = X500Name.getInstance(jcaRequest.getSubject().getEncoded());
 
-                JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
+            JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(
                     issuerName,
                     serial,
                     notBefore,
                     notAfter,
                     subjectName,
                     jcaRequest.getPublicKey()
-                );
+            );
 
-                ContentSigner signer = new JcaContentSignerBuilder(ca.signatureAlgorithm)
+            ContentSigner signer = new JcaContentSignerBuilder(ca.signatureAlgorithm)
                     .setProvider(BouncyCastleProvider.PROVIDER_NAME)
                     .build(caPrivateKey);
 
-                X509CertificateHolder issuedHolder = certBuilder.build(signer);
-                X509Certificate issuedCert = new JcaX509CertificateConverter()
+            X509CertificateHolder issuedHolder = certBuilder.build(signer);
+            X509Certificate issuedCert = new JcaX509CertificateConverter()
                     .setProvider(BouncyCastleProvider.PROVIDER_NAME)
                     .getCertificate(issuedHolder);
 
@@ -228,20 +237,21 @@ public class CAService {
                 if (ou.isPresent()) {
                     cm.gov.pki.entity.User user = ou.get();
                     Certificate certEntity = new Certificate();
-                    try {
-                        setField(certEntity, "user", user);
-                        setField(certEntity, "serialNumber", serial.toString());
-                        setField(certEntity, "fingerprintSha256", hex.toString());
-                        setField(certEntity, "certificatePem", pem);
-                        setField(certEntity, "publicKeyPem", jcaRequest.getPublicKey().toString());
-                        setField(certEntity, "subjectDN", subjectName.toString());
-                        setField(certEntity, "issuerDN", issuerName.toString());
-                        setField(certEntity, "notBefore", LocalDateTime.ofInstant(notBefore.toInstant(), ZoneId.systemDefault()));
-                        setField(certEntity, "notAfter", LocalDateTime.ofInstant(notAfter.toInstant(), ZoneId.systemDefault()));
-                        setField(certEntity, "status", Certificate.CertificateStatus.ACTIVE);
-                    } catch (Exception ex) {
-                        log.warn("Could not set certificate fields reflectively", ex);
+                    certEntity.setUser(user);
+                    certEntity.setSerialNumber(serial.toString());
+                    certEntity.setFingerprintSha256(hex.toString());
+                    certEntity.setCertificatePem(pem);
+                    certEntity.setPublicKeyPem(jcaRequest.getPublicKey().toString());
+                    certEntity.setSubjectDN(subjectName.toString());
+                    certEntity.setIssuerDN(issuerName.toString());
+                    certEntity.setNotBefore(LocalDateTime.ofInstant(notBefore.toInstant(), ZoneId.systemDefault()));
+                    certEntity.setNotAfter(LocalDateTime.ofInstant(notAfter.toInstant(), ZoneId.systemDefault()));
+                    certEntity.setStatus(Certificate.CertificateStatus.ACTIVE);
+
+                    if (requestId != null) {
+                        certificateRequestRepository.findById(requestId).ifPresent(certEntity::setRequest);
                     }
+
                     certificateRepository.save(certEntity);
                 }
             }
@@ -301,7 +311,7 @@ public class CAService {
     }
 
     /**
-     * Générer un CSR valide pour les tests (retourne PEM)
+     * GÃ©nÃ©rer un CSR valide pour les tests (retourne PEM)
      */
     public String generateCSR(String commonName, String organization, String country) {
         try {
@@ -328,20 +338,20 @@ public class CAService {
             return sw.toString();
         } catch (Exception e) {
             log.error("Failed to generate CSR", e);
-            throw new RuntimeException("Échec génération CSR: " + e.getMessage(), e);
+            throw new RuntimeException("Ã‰chec gÃ©nÃ©ration CSR: " + e.getMessage(), e);
         }
     }
 
     /**
-     * Générer une AC intermédiaire signée par l'AC racine active
+     * GÃ©nÃ©rer une AC intermÃ©diaire signÃ©e par l'AC racine active
      */
     @Transactional
     public CAConfiguration generateIntermediateCA(String caName, int keySize, int validityDays) {
         try {
             CAConfiguration rootCA = caConfigurationRepository.findFirstByIsActiveTrueOrderByCreatedAtDesc()
-                    .orElseThrow(() -> new RuntimeException("Aucune AC racine active trouvée"));
+                    .orElseThrow(() -> new RuntimeException("Aucune AC racine active trouvÃ©e"));
 
-            // Charger la clé privée de l'AC racine depuis le keystore ou directement (si PEM existe encore)
+            // Charger la clÃ© privÃ©e de l'AC racine depuis le keystore ou directement (si PEM existe encore)
             Path rootCertPath = Path.of(rootCA.caCertPath);
             Path rootKeyPath = Path.of(rootCA.caKeyPath);
             
@@ -368,12 +378,12 @@ public class CAService {
                 }
             }
 
-            // Générer paire de clés pour l'AC intermédiaire
+            // GÃ©nÃ©rer paire de clÃ©s pour l'AC intermÃ©diaire
             KeyPairGenerator kpg = KeyPairGenerator.getInstance("RSA", BouncyCastleProvider.PROVIDER_NAME);
             kpg.initialize(keySize, new SecureRandom());
             KeyPair intermediateKeyPair = kpg.generateKeyPair();
 
-            // Créer le certificat intermédiaire
+            // CrÃ©er le certificat intermÃ©diaire
             X500Name intermediateSubject = new X500Name("CN=" + caName + ", O=PKI Souverain, C=CM");
             BigInteger serial = BigInteger.valueOf(Math.abs(new SecureRandom().nextLong()));
 
@@ -391,7 +401,7 @@ public class CAService {
                     intermediateKeyPair.getPublic()
             );
 
-            // Ajouter les extensions pour une AC intermédiaire
+            // Ajouter les extensions pour une AC intermÃ©diaire
             certBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(true));
             certBuilder.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.keyCertSign | KeyUsage.cRLSign));
 
@@ -403,7 +413,7 @@ public class CAService {
                     .setProvider(BouncyCastleProvider.PROVIDER_NAME)
                     .getCertificate(certBuilder.build(signer));
 
-            // Sauvegarder les fichiers PEM intermédiaires
+            // Sauvegarder les fichiers PEM intermÃ©diaires
             String baseName = caName.replaceAll("\\s+", "_").toLowerCase();
             Path intermediateCertPath = Path.of(caStore, baseName + ".crt.pem");
             Path intermediateKeyPath = Path.of(caStore, baseName + ".key.pem");
@@ -416,7 +426,7 @@ public class CAService {
                 pw.writeObject(intermediateKeyPair.getPrivate());
             }
 
-                // Persister la configuration via le builder (évite dépendre des setters Lombok)
+                // Persister la configuration via le builder (Ã©vite dÃ©pendre des setters Lombok)
                 CAConfiguration cfg = new CAConfiguration();
                 cfg.caName = caName;
                 cfg.caCertPath = intermediateCertPath.toAbsolutePath().toString();
@@ -434,7 +444,7 @@ public class CAService {
 
         } catch (Exception e) {
             log.error("Failed to generate intermediate CA", e);
-            throw new RuntimeException("Échec génération AC intermédiaire: " + e.getMessage(), e);
+            throw new RuntimeException("Ã‰chec gÃ©nÃ©ration AC intermÃ©diaire: " + e.getMessage(), e);
         }
     }
 
@@ -499,7 +509,7 @@ public class CAService {
 
     
 
-    // Charge la clé privée pour une CA : tente le PEM puis le PKCS12 keystore (alias 'ca-key').
+    // Charge la clÃ© privÃ©e pour une CA : tente le PEM puis le PKCS12 keystore (alias 'ca-key').
     private PrivateKey loadPrivateKeyForCA(CAConfiguration ca) {
         try {
             // Try PEM first
@@ -533,11 +543,11 @@ public class CAService {
     }
 
     /**
-     * Générer une CRL (Certificate Revocation List) pour l'AC active
+     * GÃ©nÃ©rer une CRL (Certificate Revocation List) pour l'AC active
      */
     public String generateCRL(CAConfiguration ca) {
         try {
-            // Charger l'AC (certificat et clé privée)
+            // Charger l'AC (certificat et clÃ© privÃ©e)
             Path caKeyPath = Path.of(ca.caKeyPath);
             Path caCertPath = Path.of(ca.caCertPath);
 
@@ -563,8 +573,8 @@ public class CAService {
                 caCert = new JcaX509CertificateConverter().setProvider(BouncyCastleProvider.PROVIDER_NAME).getCertificate(holder);
             }
 
-            // Récupérer les certificats révoqués depuis la base de données
-            // Pour l'instant, créer une CRL vide (aucun certificat révoqué)
+            // RÃ©cupÃ©rer les certificats rÃ©voquÃ©s depuis la base de donnÃ©es
+            // Pour l'instant, crÃ©er une CRL vide (aucun certificat rÃ©voquÃ©)
             X500Name issuerName = X500Name.getInstance(caCert.getSubjectX500Principal().getEncoded());
             Date thisUpdate = Date.from(Instant.now());
             Date nextUpdate = Date.from(Instant.now().plusSeconds(7 * 24 * 3600)); // 7 jours
@@ -575,7 +585,7 @@ public class CAService {
             );
             crlBuilder.setNextUpdate(nextUpdate);
 
-            // Ajouter les entrées de révocation depuis le repository Certificate
+            // Ajouter les entrÃ©es de rÃ©vocation depuis le repository Certificate
             for (cm.gov.pki.entity.Certificate c : certificateRepository.findAll()) {
                 try {
                     Object statusObj = getField(c, "status");
@@ -615,7 +625,8 @@ public class CAService {
 
         } catch (Exception e) {
             log.error("Failed to generate CRL", e);
-            throw new RuntimeException("Échec génération CRL: " + e.getMessage(), e);
+            throw new RuntimeException("Ã‰chec gÃ©nÃ©ration CRL: " + e.getMessage(), e);
         }
     }
 }
+

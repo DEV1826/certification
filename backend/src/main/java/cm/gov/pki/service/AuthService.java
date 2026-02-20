@@ -171,6 +171,10 @@ public class AuthService {
      */
     public User getUserFromToken(String token) {
         Claims claims = validateToken(token);
+        Object type = claims.get("type");
+        if (type != null && "refresh".equalsIgnoreCase(type.toString())) {
+            throw new RuntimeException("Refresh token non autorisé pour l'accès");
+        }
         UUID userId = UUID.fromString(claims.getSubject());
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé"));

@@ -44,7 +44,7 @@ public class AdminController {
 		this.emailService = emailService;
 	}
 
-	@GetMapping("/ca-status")
+	@GetMapping({"/ca-status", "/ca/status"})
 	public ResponseEntity<CAConfiguration> getCaStatus() {
 		return caConfigurationRepository.findTopByOrderByCreatedAtDesc()
 				.map(ResponseEntity::ok)
@@ -116,7 +116,7 @@ public class AdminController {
 		}
 	}
 
-	@PostMapping("/generate-ca")
+	@PostMapping({"/generate-ca", "/ca/initialize"})
 	public ResponseEntity<CAConfiguration> generateCa(@RequestParam(value = "name", defaultValue = "PKI Souverain Root CA") String name) {
 		CAConfiguration config = caService.generateRootCA(name, 4096, 3650);
 		return ResponseEntity.ok(config);
@@ -292,7 +292,7 @@ public class AdminController {
 		if (req.getCsrContent() == null || req.getCsrContent().isBlank()) {
 			return ResponseEntity.status(400).body(java.util.Map.of("error", "No CSR provided for this request"));
 		}
-		String certPem = caService.signCSR(req.getCsrContent(), validityDays, req.getUser().getId());
+		String certPem = caService.signCSR(req.getCsrContent(), validityDays, req.getUser().getId(), req.getId());
 		
 		// Générer un token de validation
 		String validationToken = java.util.UUID.randomUUID().toString();

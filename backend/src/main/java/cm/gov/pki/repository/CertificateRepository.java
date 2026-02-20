@@ -17,4 +17,5 @@ public interface CertificateRepository extends JpaRepository<Certificate, UUID> 
     List<Certificate> findByStatusAndNotAfterBefore(Certificate.CertificateStatus status, LocalDateTime date);
     long countByStatus(Certificate.CertificateStatus status);
     boolean existsBySerialNumber(String serialNumber);
+    Optional<Certificate> findFirstByRequestId(UUID requestId);
 }
