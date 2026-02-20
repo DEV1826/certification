@@ -17,3 +17,7 @@
 
 # Logs
 *.log
+
+/logs/
+*.log
+/target/
